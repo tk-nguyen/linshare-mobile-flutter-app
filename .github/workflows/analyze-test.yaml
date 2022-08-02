@@ -26,13 +26,14 @@ jobs:
         run: |
           flutter analyze --no-fatal-warnings --no-fatal-infos
           flutter test --reporter json > test-results-general.json
-          flutter test data --reporter json > test-result-data.json
-          flutter test domain --reporter json > test-result-domain.json
+          flutter test data --reporter json > test-results-data.json
+          flutter test domain --reporter json > test-results-domain.json
 
       - name: Test reports
         uses: dorny/test-reporter@v1
         if: success() || failure() # run this step even if previous step failed
         with:
-          name: Flutter Tests $1
+          name: Flutter Tests
           path: "test-results-*.json"
           reporter: "flutter-json"
+          # only-summary: "true"

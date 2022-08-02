@@ -46,6 +46,5 @@ cd ../ios
 flutter pub get && pod install
 
 cd ..
-flutter pub get && \
 flutter pub run intl_generator:extract_to_arb --output-dir=./lib/l10n lib/presentation/localizations/app_localizations.dart && \
 flutter pub run intl_generator:generate_from_arb --output-dir=lib/l10n --no-use-deferred-loading lib/presentation/localizations/app_localizations.dart lib/l10n/intl*.arb
