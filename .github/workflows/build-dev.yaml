@@ -9,7 +9,8 @@ jobs:
 
   build-android:
     name: Build Android apps
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
+    environment: dev
     needs:
       - analyze-test
     steps:
