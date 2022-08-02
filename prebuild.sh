@@ -35,17 +35,19 @@ set -e
 # debug log
 set -x
 
+flutter pub get
+
 cd data
-flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs
+flutter pub run build_runner build --delete-conflicting-outputs
 
 cd ../domain
-flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs
+flutter pub run build_runner build --delete-conflicting-outputs
 
 # Install necessary pods
 cd ../ios
-flutter pub get && pod install
+pod install
 
 cd ..
-flutter pub get && flutter pub run intl_generator:extract_to_arb --output-dir=./lib/l10n lib/presentation/localizations/app_localizations.dart
+flutter pub run intl_generator:extract_to_arb --output-dir=./lib/l10n lib/presentation/localizations/app_localizations.dart
 
-flutter pub get && flutter pub run intl_generator:generate_from_arb --output-dir=lib/l10n --no-use-deferred-loading lib/presentation/localizations/app_localizations.dart lib/l10n/intl*.arb
+flutter pub run intl_generator:generate_from_arb --output-dir=lib/l10n --no-use-deferred-loading lib/presentation/localizations/app_localizations.dart lib/l10n/intl*.arb

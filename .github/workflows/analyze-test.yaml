@@ -34,5 +34,5 @@ jobs:
         if: success() || failure() # run this step even if previous step failed
         with:
           name: Flutter Tests $1
-          path: "/test-results-(.*).json/"
+          path: "test-results-*.json"
           reporter: "flutter-json"
