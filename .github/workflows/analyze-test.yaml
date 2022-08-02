@@ -1,0 +1,38 @@
+on:
+  workflow_dispatch:
+
+name: Analyze and test
+
+jobs:
+  analyze-test:
+    name: Analyze and test
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+          cache-key: deps-${{ hashFiles('pubspec.lock') }} # optional, change this to force refresh cache
+          cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
+
+      - name: Run prebuild
+        run: bash prebuild.sh
+
+      - name: Analyze and test
+        run: |
+          flutter analyze --no-fatal-warnings --no-fatal-infos
+          flutter test --reporter json > test-results-general.json
+          flutter test data --reporter json > test-result-data.json
+          flutter test domain --reporter json > test-result-domain.json
+
+      - name: Test reports
+        uses: dorny/test-reporter@v1
+        if: success() || failure() # run this step even if previous step failed
+        with:
+          name: Flutter Tests $1
+          path: "/test-results-(.*).json/"
+          reporter: "flutter-json"
