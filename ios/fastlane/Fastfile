@@ -30,7 +30,7 @@ platform :ios do
       path: "linsharedevelopmentprofile.mobileprovision"
     )
     install_provisioning_profile(
-      path: "linsharedevelopmentprofile.mobileprovision"
+      path: "linshareshareextdevelopmentprofile.mobileprovision"
     )
     gym(
       scheme: "Runner",
