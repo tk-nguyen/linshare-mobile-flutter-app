@@ -23,6 +23,7 @@ platform :ios do
     import_certificate(
       certificate_path: "cert.p12",
       certificate_password: ENV["CERTIFICATE_PASSWORD"],
+      keychain_name: ENV["MATCH_KEYCHAIN_NAME"]
     )
     sh 'mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles'
     sh 'cp ../*.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles'
