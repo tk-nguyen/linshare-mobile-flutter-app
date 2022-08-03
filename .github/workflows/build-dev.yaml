@@ -80,7 +80,7 @@ jobs:
 
       - name: Setup environment
         env:
-          GOOGLE_SERVICES_PLIST: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          GOOGLE_SERVICES_PLIST: ${{ secrets.GOOGLE_SERVICES_PLIST }}
           CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
           PROVISION_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
           SHAREEXT_PROVISION_PROFILE_BASE64: ${{ secrets.SHAREEXT_PROVISIONING_PROFILE_BASE64 }}
