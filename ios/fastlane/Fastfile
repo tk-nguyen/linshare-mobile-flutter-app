@@ -15,24 +15,17 @@
 
 opt_out_usage
 default_platform(:ios)
+setup_ci if ENV['CI']
 
 platform :ios do
   desc "Build development version"
   lane :dev do
-    create_keychain(
-      name: "linshare",
-      default_keychain: true,
-      password: ENV["KEYCHAIN_PASSWORD"]
-      unlock: true,
-      timeout: 3600,
-    )
     import_certificate(
       certificate_path: "cert.p12",
       certificate_password: ENV["CERTIFICATE_PASSWORD"],
-      keychain_password: ENV["KEYCHAIN_PASSWORD"]
     )
     sh 'mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles'
-    sh 'cp *.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles'
+    sh 'cp ../*.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles'
     gym(
       scheme: "Runner",
       workspace: "Runner.xcworkspace",

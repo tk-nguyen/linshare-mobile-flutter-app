@@ -105,7 +105,7 @@ jobs:
         env:
           CAPTCHA_TOKEN: ${{ secrets.CAPTCHA_TOKEN }}
           SAAS_AVAILABLE: "true"
-          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
         run: bundle exec fastlane dev
         working-directory: ios
 
