@@ -15,6 +15,7 @@
 
 opt_out_usage
 default_platform(:ios)
+setup_ci if ENV['CI']
 
 platform :ios do
   desc "Build development version"
