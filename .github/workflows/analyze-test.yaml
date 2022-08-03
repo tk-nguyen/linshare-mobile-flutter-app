@@ -33,7 +33,7 @@ jobs:
         uses: dorny/test-reporter@v1
         if: success() || failure() # run this step even if previous step failed
         with:
-          name: Flutter Tests
+          name: Flutter Tests Results
           path: "test-results-*.json"
           reporter: "flutter-json"
           # only-summary: "true"
