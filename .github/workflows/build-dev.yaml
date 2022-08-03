@@ -24,6 +24,7 @@ jobs:
           cache: true
           cache-key: deps-${{ hashFiles('pubspec.lock') }} # optional, change this to force refresh cache
           cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
+
       - name: Setup environment
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
@@ -58,3 +59,58 @@ jobs:
         with:
           name: linshare-dev
           path: "build/app/outputs/flutter-apk/app-release.apk"
+
+  build-ios:
+    name: Build iOS apps
+    runs-on: macos-latest
+    environment: dev
+    needs:
+      - analyze-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+          cache-key: deps-${{ hashFiles('pubspec.lock') }} # optional, change this to force refresh cache
+          cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
+
+      - name: Setup environment
+        env:
+          GOOGLE_SERVICES_PLIST: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_BASE64 }}
+          PROVISION_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+          SHAREEXT_PROVISION_PROFILE_BASE64: ${{ secrets.SHAREEXT_PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          echo "$GOOGLE_SERVICES_PLIST" > ios/Runner/GoogleService-Info.plist
+          echo "$CERTIFICATE_BASE64" | base64 -d > cert.p12
+          echo "$PROVISION_PROFILE_BASE64" | base64 -d > linsharedevelopmentprofile.mobileprovision
+          echo "$SHAREEXT_PROVISION_PROFILE_BASE64" | base64 -d > linshareshareextdevelopmentprofile.mobileprovision
+        working-directory: ios
+
+      - name: Setup Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "ruby"
+          bundler-cache: true
+          working-directory: ios
+
+      - name: Run prebuild
+        run: bash prebuild.sh
+
+      - name: Build IPA
+        env:
+          CAPTCHA_TOKEN: ${{ secrets.CAPTCHA_TOKEN }}
+          SAAS_AVAILABLE: "true"
+        run: bundle exec fastlane dev
+        working-directory: ios
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: linshare-dev
+          path: "ios/LinShare.ipa"

@@ -1,0 +1,47 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+opt_out_usage
+default_platform(:ios)
+setup_ci if ENV['CI']
+
+platform :ios do
+  desc "Build development version"
+  lane :dev do
+    import_certificate(
+      certificate_path: "ios/cert.p12",
+      certificate_password: ENV["CERTIFICATE_PASSWORD"]
+    )
+    # 2 provision profiles, one for the app and one for the share extension
+    install_provisioning_profile(
+      path: "ios/linsharedevelopmentprofile.mobileprovision"
+    )
+    install_provisioning_profile(
+      path: "ios/linsharedevelopmentprofile.mobileprovision"
+    )
+    gym(
+      scheme: "Runner",
+      workspace: "Runner.xcworkspace",
+      codesigning_identity: "Apple Development: Nguyen Thai",
+      export_method: "development",
+      export_options: {
+        provisioningProfiles: {
+          "com.linagora.ios.linshare" => "linshare.development.profile",
+          "com.linagora.ios.linshare.extension" => "linshare.share.ext.development.profile"
+        }
+      }
+    )
+  end
+end
