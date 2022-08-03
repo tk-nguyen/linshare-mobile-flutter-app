@@ -15,24 +15,24 @@
 
 opt_out_usage
 default_platform(:ios)
-setup_ci if ENV['CI']
 
 platform :ios do
   desc "Build development version"
   lane :dev do
+    create_keychain(
+      name: "linshare",
+      default_keychain: true,
+      password: ENV["KEYCHAIN_PASSWORD"]
+      unlock: true,
+      timeout: 3600,
+    )
     import_certificate(
       certificate_path: "cert.p12",
       certificate_password: ENV["CERTIFICATE_PASSWORD"],
-      keychain_name: ENV["MATCH_KEYCHAIN_NAME"],
-      keychain_path: ENV["KEYCHAIN_PATH"]
+      keychain_password: ENV["KEYCHAIN_PASSWORD"]
     )
-    # 2 provision profiles, one for the app and one for the share extension
-    install_provisioning_profile(
-      path: "linsharedevelopmentprofile.mobileprovision"
-    )
-    install_provisioning_profile(
-      path: "linshareshareextdevelopmentprofile.mobileprovision"
-    )
+    sh 'mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles'
+    sh 'cp *.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles'
     gym(
       scheme: "Runner",
       workspace: "Runner.xcworkspace",
