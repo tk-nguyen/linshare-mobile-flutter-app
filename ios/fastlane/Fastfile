@@ -25,8 +25,8 @@ platform :ios do
       certificate_password: ENV["CERTIFICATE_PASSWORD"],
       keychain_name: ENV["MATCH_KEYCHAIN_NAME"]
     )
-    sh 'mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles'
-    sh 'cp ../*.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles'
+    install_provisioning_profile(path: "linsharedevelopmentprofile.mobileprovision")
+    install_provisioning_profile(path: "linshareshareextdevelopmentprofile.mobileprovision")
     gym(
       scheme: "Runner",
       workspace: "Runner.xcworkspace",
