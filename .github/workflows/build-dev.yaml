@@ -49,7 +49,7 @@ jobs:
       - name: Restoring cache from build_runner output
         uses: actions/cache@v3
         with:
-          key: build-runner-${{ hashFiles('data/test', 'data/lib', 'domain/test', 'domain/lib') }}
+          key: build-runner-${{ hashFiles('data/**/*.dart', 'domain/**/*.dart') }}
           path: |
             data/.dart-tool
             domain/.dart-tool
@@ -111,7 +111,7 @@ jobs:
       - name: Restoring cache from build_runner output
         uses: actions/cache@v3
         with:
-          key: build-runner-${{ hashFiles('data/test', 'data/lib', 'domain/test', 'domain/lib') }}
+          key: build-runner-${{ hashFiles('data/**/*.dart', 'domain/**/*.dart') }}
           path: |
             data/.dart-tool
             domain/.dart-tool
