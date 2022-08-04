@@ -89,6 +89,8 @@ jobs:
           echo -n "$CERTIFICATE_BASE64" | base64 --decode --output $RUNNER_TEMP/cert.p12
           echo -n "$PROVISION_PROFILE_BASE64" | base64 --decode --output $RUNNER_TEMP/buildpp.mobileprovision
           echo -n "$SHAREEXT_PROVISION_PROFILE_BASE64" | base64 --decode --output $RUNNER_TEMP/shareextpp.mobileprovision
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $RUNNER_TEMP/*.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles
         working-directory: ios
 
       - name: Setup Fastlane
