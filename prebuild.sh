@@ -36,10 +36,10 @@ set -e
 set -x
 
 cd data
-flutter pub get && flutter pub run build_runner build #--delete-conflicting-outputs
+flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs
 
 cd ../domain
-flutter pub get && flutter pub run build_runner build #--delete-conflicting-outputs
+flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs
 
 # Install necessary pods
 cd ../ios
