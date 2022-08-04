@@ -49,10 +49,12 @@ jobs:
       - name: Restoring cache from build_runner output
         uses: actions/cache@v3
         with:
-          key: build-runner-${{ hashFiles('data/pubspec.lock', 'domain/pubspec.lock') }}
+          key: build-runner
           path: |
-            data/.dart_tool
-            domain/.dart_tool
+            **/.dart_tool
+            **/*.g.dart
+            **/*.mocks.dart
+            **/*.config.dart
 
       - name: Run prebuild
         run: bash prebuild.sh
@@ -113,8 +115,10 @@ jobs:
         with:
           key: build-runner-${{ hashFiles('data/pubspec.lock', 'domain/pubspec.lock') }}
           path: |
-            data/.dart_tool
-            domain/.dart_tool
+            **/.dart_tool
+            **/*.g.dart
+            **/*.mocks.dart
+            **/*.config.dart
 
       - name: Run prebuild
         run: bash prebuild.sh

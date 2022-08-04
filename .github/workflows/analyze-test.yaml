@@ -22,10 +22,12 @@ jobs:
       - name: Caching build_runner output
         uses: actions/cache@v3
         with:
-          key: build-runner-${{ hashFiles('data/pubspec.lock', 'domain/pubspec.lock') }}
+          key: build-runner
           path: |
-            data/.dart_tool
-            domain/.dart_tool
+            **/.dart_tool
+            **/*.g.dart
+            **/*.mocks.dart
+            **/*.config.dart
 
       - name: Run prebuild
         run: bash prebuild.sh
@@ -36,9 +38,9 @@ jobs:
 
       - name: Test
         run: |
-          flutter test --reporter json > test-results-general.json
-          flutter test data --reporter json > test-results-data.json
-          flutter test domain --reporter json > test-results-domain.json
+          flutter test --reporter json > test-results-general.json &
+          flutter test data --reporter json > test-results-data.json &
+          flutter test domain --reporter json > test-results-domain.json &
 
       - name: Test reports
         uses: dorny/test-reporter@v1
