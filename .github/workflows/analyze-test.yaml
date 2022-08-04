@@ -24,15 +24,18 @@ jobs:
         with:
           key: build-runner-${{ hashFiles('data/**/*.dart', 'domain/**/*.dart') }}
           path: |
-            data/.dart-tool
-            domain/.dart-tool
+            data/.dart_tool
+            domain/.dart_tool
 
       - name: Run prebuild
         run: bash prebuild.sh
 
-      - name: Analyze and test
+      - name: Analyze
         run: |
           flutter analyze --no-fatal-warnings --no-fatal-infos
+
+      - name: Test
+        run: |
           flutter test --reporter json > test-results-general.json
           flutter test data --reporter json > test-results-data.json
           flutter test domain --reporter json > test-results-domain.json

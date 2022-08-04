@@ -51,8 +51,8 @@ jobs:
         with:
           key: build-runner-${{ hashFiles('data/**/*.dart', 'domain/**/*.dart') }}
           path: |
-            data/.dart-tool
-            domain/.dart-tool
+            data/.dart_tool
+            domain/.dart_tool
 
       - name: Run prebuild
         run: bash prebuild.sh
@@ -113,8 +113,8 @@ jobs:
         with:
           key: build-runner-${{ hashFiles('data/**/*.dart', 'domain/**/*.dart') }}
           path: |
-            data/.dart-tool
-            domain/.dart-tool
+            data/.dart_tool
+            domain/.dart_tool
 
       - name: Run prebuild
         run: bash prebuild.sh
