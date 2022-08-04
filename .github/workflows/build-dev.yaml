@@ -46,6 +46,14 @@ jobs:
           distribution: "temurin"
           java-version: "11"
 
+      - name: Restoring cache from build_runner output
+        uses: actions/cache@v3
+        with:
+          key: build-runner-${{ hashFiles('data/test', 'data/lib', 'domain/test', 'domain/lib') }}
+          path: |
+            data/.dart-tool
+            domain/.dart-tool
+
       - name: Run prebuild
         run: bash prebuild.sh
 
@@ -99,6 +107,14 @@ jobs:
           ruby-version: "ruby"
           bundler-cache: true
           working-directory: ios
+
+      - name: Restoring cache from build_runner output
+        uses: actions/cache@v3
+        with:
+          key: build-runner-${{ hashFiles('data/test', 'data/lib', 'domain/test', 'domain/lib') }}
+          path: |
+            data/.dart-tool
+            domain/.dart-tool
 
       - name: Run prebuild
         run: bash prebuild.sh

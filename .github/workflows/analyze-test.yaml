@@ -19,6 +19,14 @@ jobs:
           cache-key: deps-${{ hashFiles('pubspec.lock') }} # optional, change this to force refresh cache
           cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
 
+      - name: Caching build_runner output
+        uses: actions/cache@v3
+        with:
+          key: build-runner-${{ hashFiles('data/test', 'data/lib', 'domain/test', 'domain/lib') }}
+          path: |
+            data/.dart-tool
+            domain/.dart-tool
+
       - name: Run prebuild
         run: bash prebuild.sh
 
