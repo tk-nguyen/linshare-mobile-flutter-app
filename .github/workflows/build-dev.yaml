@@ -59,7 +59,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: linshare-dev-pr-${{ github.ref_name }}
+          name: linshare-dev-pr-${{ github.event.pull_request.number }}
           path: "build/app/outputs/flutter-apk/app-release.apk"
 
   build-ios:
@@ -114,5 +114,5 @@ jobs:
       - name: Upload IPA
         uses: actions/upload-artifact@v3
         with:
-          name: linshare-dev-pr-${{ github.ref_name }}
+          name: linshare-dev-pr-${{ github.event.pull_request.number }}
           path: "ios/LinShare.ipa"
