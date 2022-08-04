@@ -3,14 +3,11 @@ on:
     paths-ignore:
       - ".github/**"
 
-name: Build development versions
+name: Test and build development versions
 
 jobs:
-  analyze-test:
-    uses: ./.github/workflows/analyze-test.yaml
-
-  build-android:
-    name: Build Android app
+  test-build-app:
+    name: Build APK and IPA
     runs-on: macos-latest
     environment: dev
     steps:
@@ -25,60 +22,13 @@ jobs:
           cache-key: deps-${{ hashFiles('pubspec.lock') }} # optional, change this to force refresh cache
           cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
 
-      - name: Setup environment
+      - name: Setup Android environment
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
         working-directory: android
 
-      - name: Setup Fastlane
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "ruby"
-          bundler-cache: true
-          working-directory: android
-
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "11"
-
-      - name: Run prebuild
-        run: bash prebuild.sh
-
-      - name: Build APK
-        env:
-          CAPTCHA_TOKEN: ${{ secrets.CAPTCHA_TOKEN }}
-          SAAS_AVAILABLE: "true"
-        run: bundle exec fastlane dev
-        working-directory: android
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: linshare-dev-pr-${{ github.ref_name }}
-          path: "build/app/outputs/flutter-apk/app-release.apk"
-
-  build-ios:
-    name: Build iOS app
-    runs-on: macos-latest
-    environment: dev
-    needs:
-      - analyze-test
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-          cache: true
-          cache-key: deps-${{ hashFiles('pubspec.lock') }} # optional, change this to force refresh cache
-          cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
-
-      - name: Setup environment
+      - name: Setup iOS environment
         env:
           GOOGLE_SERVICES_PLIST: ${{ secrets.GOOGLE_SERVICES_PLIST }}
           CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
@@ -96,21 +46,49 @@ jobs:
         with:
           ruby-version: "ruby"
           bundler-cache: true
-          working-directory: ios
+          working-directory: android
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "11"
 
       - name: Run prebuild
         run: bash prebuild.sh
 
-      - name: Build IPA
+      - name: Analyze
+        run: |
+          flutter analyze --no-fatal-warnings --no-fatal-infos
+
+      - name: Test
+        run: |
+          flutter test --reporter json > test-results-general.json
+          flutter test data --reporter json > test-results-data.json
+          flutter test domain --reporter json > test-results-domain.json
+
+      - name: Upload test reports
+        uses: dorny/test-reporter@v1
+        if: success() || failure() # run this step even if previous step failed
+        with:
+          name: Flutter Tests Results
+          path: "test-results-*.json"
+          reporter: "flutter-json"
+          # only-summary: "true"
+
+      - name: Build app
         env:
           CAPTCHA_TOKEN: ${{ secrets.CAPTCHA_TOKEN }}
           SAAS_AVAILABLE: "true"
           CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
-        run: bundle exec fastlane dev
-        working-directory: ios
+        run: |
+          cd android && bundle exec fastlane dev &
+          cd ../ios && bundle exec fastlane dev &
 
-      - name: Upload IPA
+      - name: Upload app
         uses: actions/upload-artifact@v3
         with:
-          name: linshare-dev-pr-${{ github.ref_name }}
-          path: "ios/LinShare.ipa"
+          name: linshare-dev-pr-${{ github.event.pull_request.number }}
+          path: |
+            "build/app/outputs/flutter-apk/app-release.apk"
+            "ios/LinShare.ipa"
