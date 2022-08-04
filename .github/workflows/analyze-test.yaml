@@ -22,12 +22,10 @@ jobs:
       - name: Caching build_runner output
         uses: actions/cache@v3
         with:
-          key: build-runner-${{ hashFiles('data/pubspec.lock', 'domain/pubspec.lock', 'ios/Podfile.lock') }}
+          key: build-runner-${{ hashFiles('data/pubspec.lock', 'domain/pubspec.lock') }}
           path: |
             data/.dart_tool
-            data/test
             domain/.dart_tool
-            ios/Pods
 
       - name: Run prebuild
         run: bash prebuild.sh
