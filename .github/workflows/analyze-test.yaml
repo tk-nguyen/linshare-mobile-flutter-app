@@ -38,9 +38,9 @@ jobs:
 
       - name: Test
         run: |
-          flutter test --reporter json > test-results-general.json &
-          flutter test data --reporter json > test-results-data.json &
-          flutter test domain --reporter json > test-results-domain.json &
+          flutter test --reporter json > test-results-general.json
+          flutter test data --reporter json > test-results-data.json
+          flutter test domain --reporter json > test-results-domain.json
 
       - name: Test reports
         uses: dorny/test-reporter@v1
