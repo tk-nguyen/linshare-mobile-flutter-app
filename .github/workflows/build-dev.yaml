@@ -1,14 +1,16 @@
 on:
-  workflow_dispatch:
+  pull_request:
+    paths-ignore:
+      - ".github/**"
 
-name: Build dev version
+name: Build development versions
 
 jobs:
   analyze-test:
     uses: ./.github/workflows/analyze-test.yaml
 
   build-android:
-    name: Build Android apps
+    name: Build Android app
     runs-on: macos-latest
     environment: dev
     needs:
@@ -57,11 +59,11 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: linshare-dev
+          name: linshare-dev-pr-${{ github.ref_name }}
           path: "build/app/outputs/flutter-apk/app-release.apk"
 
   build-ios:
-    name: Build iOS apps
+    name: Build iOS app
     runs-on: macos-latest
     environment: dev
     needs:
@@ -112,5 +114,5 @@ jobs:
       - name: Upload IPA
         uses: actions/upload-artifact@v3
         with:
-          name: linshare-dev
+          name: linshare-dev-pr-${{ github.ref_name }}
           path: "ios/LinShare.ipa"
