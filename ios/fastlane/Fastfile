@@ -21,12 +21,13 @@ platform :ios do
   desc "Build development version"
   lane :dev do
     import_certificate(
-      certificate_path: "cert.p12",
+      certificate_path: "#{ENV['RUNNER_TEMP']}/cert.p12",
       certificate_password: ENV["CERTIFICATE_PASSWORD"],
       keychain_name: ENV["MATCH_KEYCHAIN_NAME"]
     )
-    install_provisioning_profile(path: "linsharedevelopmentprofile.mobileprovision")
-    install_provisioning_profile(path: "linshareshareextdevelopmentprofile.mobileprovision")
+    # 2 provisioning profiles, 1 for the main app and 1 for the share extension
+    install_provisioning_profile(path: "#{ENV['RUNNER_TEMP']}/buildpp.mobileprovision")
+    install_provisioning_profile(path: "#{ENV['RUNNER_TEMP']}/shareextpp.mobileprovision")
     gym(
       scheme: "Runner",
       workspace: "Runner.xcworkspace",
