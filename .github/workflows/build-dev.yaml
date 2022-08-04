@@ -10,8 +10,6 @@ jobs:
     name: Build APK and IPA
     runs-on: macos-latest
     environment: dev
-    needs:
-      - analyze-test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
