@@ -116,5 +116,6 @@ jobs:
           FASTLANE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_SPECIFIC_PASSWORD }}
           PLAY_STORE_CONFIG_JSON: ${{ secrets.PLAY_STORE_CONFIG_JSON }}
+          APPLE_APP_ID: ${{ secrets.APPLE_APP_ID }}
         run: |
           parallel 'cd {} && bundle exec fastlane release' ::: android ios
