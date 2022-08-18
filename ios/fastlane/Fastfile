@@ -96,10 +96,12 @@ platform :ios do
         }
       }
     )
-    upload_to_testflight(
-      apple_id: ENV["APPLE_APP_ID"],
-      skip_waiting_for_build_processing: true,
-      ipa: "ios/LinShare.ipa"
-    )
+    # We don't have api keys, so using command line for now
+    sh "xcrun altool --upload-app -f ../LinShare.ipa -t ios -u $FASTLANE_USER -p $FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"
+    # upload_to_testflight(
+    #   apple_id: ENV["APPLE_APP_ID"],
+    #   skip_waiting_for_build_processing: true,
+    #   ipa: "ios/LinShare.ipa"
+    # )
   end
 end
