@@ -108,7 +108,7 @@ jobs:
           SAAS_AVAILABLE: "true"
           CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
         run: |
-          echo -e "android\nios" | parallel 'cd {} && bundle exec fastlane dev'
+          parallel 'cd {} && bundle exec fastlane dev' ::: android ios
 
       - name: Upload
         uses: actions/upload-artifact@v3
