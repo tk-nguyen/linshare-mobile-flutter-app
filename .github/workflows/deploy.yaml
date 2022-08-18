@@ -117,4 +117,4 @@ jobs:
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_SPECIFIC_PASSWORD }}
           PLAY_STORE_CONFIG_JSON: ${{ secrets.PLAY_STORE_CONFIG_JSON }}
         run: |
-          echo -e "android\nios" | parallel 'cd {} && bundle exec fastlane release'
+          parallel 'cd {} && bundle exec fastlane release' ::: android ios
